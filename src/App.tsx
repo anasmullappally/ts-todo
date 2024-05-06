@@ -1,25 +1,33 @@
-import { MdDelete } from 'react-icons/md'
 import './App.css'
 import { Header } from './components/Header'
+import { useState } from 'react'
+import Input from './components/Input'
+import Button from './components/Button'
+import ItemsList from './components/ItemsList'
+import { type Items } from './types/utils'
 
 function App() {
+  const [items, setItems] = useState<Items[]>([])
+  const [input, setInput] = useState<string>("")
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    setItems((pre) => [...pre, { title: input, id: Date.now().toString() }])
+    setInput("")
+  }
+
 
   return (
     <>
       <div className='h-[90vh] flex flex-col justify-center items-center'>
         <Header />
         <div className='w-[350px]'>
-          <form className='mb-5'>
-            <input type="text" className='w-full p-2 rounded-sm mb-2' />
-            <button type='submit' className='bg-gray-700 w-full p-2'> Add</button>
+          <form className='mb-5' onSubmit={handleSubmit}>
+            <Input type='text' input={input} setInput={setInput} />
+            <Button className="bg-gray-700 w-full p-2" >Add </Button >
           </form>
-          <div className='bg-orange-800 h-52 overflow-y-auto'>
-            <div className='flex justify-between items-center border border-slate-600 pl-2 mb-2 mr-1'>
-              <p>Hello</p>
-              <button>
-                <MdDelete />
-              </button>
-            </div>
+          <div className=' h-52 overflow-y-auto'>
+            <ItemsList items={items} setItems={setItems} />
           </div>
         </div>
       </div>
